@@ -103,30 +103,39 @@ sum(is.na(activity))
 
 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
+* First strategy is to fill NAs with mean of all values from tha same interval
+
+* Second strategy is to fill NAs with zero
 
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 
+
 ```r
-tidyData3 <- within(merge(activity, activityPerInterval), {
+tidyDataWithMean <- within(merge(activity, activityPerInterval), {
     steps = ifelse(is.na(steps), averagesteps, steps)
 })
-tidyData3 <- tidyData3[, 1:3]
+tidyDataWithMean <- tidyDataWithMean[, 1:3]
+
+tidyDataWithZero <- within(activity, {
+    steps = ifelse(is.na(steps), 0, steps)
+})
 ```
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
+* Imputing with mean of all values from tha same interval
+
 
 ```r
-activityPerDay2 <- ddply(tidyData3, .(date), summarize, steps=sum(steps))
-hist(activityPerDay2$steps, breaks = "FD", col = "red")
+activityPerDayImpMean <- ddply(tidyDataWithMean, .(date), summarize, steps=sum(steps))
+hist(activityPerDayImpMean$steps, breaks = "FD", col = "red")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
-
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
 
 ```r
-mean(activityPerDay2$steps, na.rm = TRUE)
+mean(activityPerDayImpMean$steps, na.rm = TRUE)
 ```
 
 ```
@@ -134,12 +143,44 @@ mean(activityPerDay2$steps, na.rm = TRUE)
 ```
 
 ```r
-median(activityPerDay2$steps, na.rm = TRUE)
+median(activityPerDayImpMean$steps, na.rm = TRUE)
 ```
 
 ```
 ## [1] 10762
 ```
+
+* Imputing with zero
+
+
+```r
+activityPerDayImpZero <- ddply(tidyDataWithZero, .(date), summarize, steps=sum(steps))
+hist(activityPerDayImpZero$steps, breaks = "FD", col = "green")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+
+```r
+mean(activityPerDayImpZero$steps, na.rm = TRUE)
+```
+
+```
+## [1] 9354.23
+```
+
+```r
+median(activityPerDayImpZero$steps, na.rm = TRUE)
+```
+
+```
+## [1] 10395
+```
+
+The impact of imputing missing data depends on strategy:
+
+1. In case of using **mean** instead of NAs the result is **very close** to source data
+
+2. In case of using **zero** instead of NAs the result is **absolutely different**
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -160,4 +201,10 @@ weekendDataPerInterval <- ddply(weekendData, .(interval), summarize, averagestep
 with(weekendDataPerInterval, plot(interval, averagesteps, type = "l", main = "weekend"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+
+Yes, there is a difference:
+
+* during weekdays anonymous moves a lot in the morning
+
+* during weekends anonymous moves evenly throughout the days 
