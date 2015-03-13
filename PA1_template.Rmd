@@ -8,7 +8,7 @@ output:
 
 ## Loading and preprocessing the data
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 library(plyr)
 activity <- read.csv("data/activity.csv")
 head(activity)
@@ -19,7 +19,7 @@ str(activity)
 
 1. Make a histogram of the total number of steps taken each day
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 # ignore the missing values in the dataset
 tidyData <- activity[!is.na(activity$steps), ]
 activityPerDay <- ddply(tidyData, .(date), summarize, steps=sum(steps))
@@ -28,7 +28,7 @@ hist(activityPerDay$steps, breaks = "FD", col = "blue")
 
 2. Calculate and report the mean and median total number of steps taken per day
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 mean(activityPerDay$steps, na.rm = TRUE)
 median(activityPerDay$steps, na.rm = TRUE)
 ```
@@ -37,14 +37,14 @@ median(activityPerDay$steps, na.rm = TRUE)
 
 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 activityPerInterval <- ddply(activity, .(interval), summarize, averagesteps=round(mean(steps, na.rm = TRUE)))
 with(activityPerInterval, plot(interval, averagesteps, type = "l"))
 ```
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 activityPerInterval[which.max(activityPerInterval$averagesteps), ]
 ```
 
@@ -52,7 +52,7 @@ activityPerInterval[which.max(activityPerInterval$averagesteps), ]
 
 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 sum(is.na(activity))
 ```
 
@@ -65,7 +65,7 @@ sum(is.na(activity))
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 tidyDataWithMean <- within(merge(activity, activityPerInterval), {
     steps = ifelse(is.na(steps), averagesteps, steps)
 })
@@ -80,22 +80,22 @@ tidyDataWithZero <- within(activity, {
 
 * Imputing with mean of all values from tha same interval
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 activityPerDayImpMean <- ddply(tidyDataWithMean, .(date), summarize, steps=sum(steps))
 hist(activityPerDayImpMean$steps, breaks = "FD", col = "red")
 ```
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 mean(activityPerDayImpMean$steps, na.rm = TRUE)
 median(activityPerDayImpMean$steps, na.rm = TRUE)
 ```
 
 * Imputing with zero
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 activityPerDayImpZero <- ddply(tidyDataWithZero, .(date), summarize, steps=sum(steps))
 hist(activityPerDayImpZero$steps, breaks = "FD", col = "green")
 ```
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 mean(activityPerDayImpZero$steps, na.rm = TRUE)
 median(activityPerDayImpZero$steps, na.rm = TRUE)
 ```
@@ -108,7 +108,7 @@ The impact of imputing missing data depends on strategy:
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+```{r, echo=TRUE, fig.path="figures/"}
 activity$weekday <- weekdays(as.Date(activity$date))
 weekend <- c("Saturday", "Sunday")
 activity$daytype <- factor(ifelse(activity$weekday %in% weekend, "weekend", "weekday"))

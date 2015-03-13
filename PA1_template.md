@@ -43,7 +43,7 @@ activityPerDay <- ddply(tidyData, .(date), summarize, steps=sum(steps))
 hist(activityPerDay$steps, breaks = "FD", col = "blue")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![](figures/unnamed-chunk-2-1.png) 
 
 2. Calculate and report the mean and median total number of steps taken per day
 
@@ -74,7 +74,7 @@ activityPerInterval <- ddply(activity, .(interval), summarize, averagesteps=roun
 with(activityPerInterval, plot(interval, averagesteps, type = "l"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](figures/unnamed-chunk-4-1.png) 
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -132,7 +132,7 @@ activityPerDayImpMean <- ddply(tidyDataWithMean, .(date), summarize, steps=sum(s
 hist(activityPerDayImpMean$steps, breaks = "FD", col = "red")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+![](figures/unnamed-chunk-8-1.png) 
 
 ```r
 mean(activityPerDayImpMean$steps, na.rm = TRUE)
@@ -158,7 +158,7 @@ activityPerDayImpZero <- ddply(tidyDataWithZero, .(date), summarize, steps=sum(s
 hist(activityPerDayImpZero$steps, breaks = "FD", col = "green")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+![](figures/unnamed-chunk-10-1.png) 
 
 ```r
 mean(activityPerDayImpZero$steps, na.rm = TRUE)
@@ -201,7 +201,7 @@ weekendDataPerInterval <- ddply(weekendData, .(interval), summarize, averagestep
 with(weekendDataPerInterval, plot(interval, averagesteps, type = "l", main = "weekend"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+![](figures/unnamed-chunk-12-1.png) 
 
 Yes, there is a difference:
 
